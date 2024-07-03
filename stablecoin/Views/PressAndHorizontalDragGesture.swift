@@ -27,10 +27,9 @@ struct PressAndHorizontalDragGestureView: UIViewRepresentable {
         }
 
         func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-            // Only on horizontal drag
             if gestureRecognizer == pan {
                 let v = pan.velocity(in: pan.view!)
-                return abs(v.x) > abs(v.y)
+                return abs(v.x) > abs(v.y) || isLongPressActivated
             } else if gestureRecognizer == longPress {
                 isLongPressActivated = true
                 return true
@@ -53,11 +52,12 @@ struct PressAndHorizontalDragGestureView: UIViewRepresentable {
             guard let view = gesture.view else { return }
             
             let translation = gesture.translation(in: view)
+                        
             if abs(translation.x) > parent.translationThreshold {
                 isDragActivated = true
                 parent.onBegan?(.init(location: gesture.location(in: view)))
             }
-            
+
             if isLongPressActivated || isDragActivated {
                 switch gesture.state {
                 case .changed:

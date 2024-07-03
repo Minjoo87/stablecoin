@@ -36,11 +36,10 @@ class APYViewModel: ObservableObject {
         Publishers.Zip(liveAPYPublisher, avgAPYPublisher)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] liveAPY, avgAPY in
-                print(liveAPY, avgAPY)
                 if liveAPY > avgAPY {
-                    self?.apyText = String(format: "Live APY: %.2f%%", liveAPY)
+                    self?.apyText = String(format: "Live APY: %.2f%%", liveAPY*100)
                 } else {
-                    self?.apyText = String(format: "Avg APY this month: %.2f%%", avgAPY)
+                    self?.apyText = String(format: "Avg APY this month: %.2f%%", avgAPY*100)
                 }
             }
             .store(in: &cancellables)
